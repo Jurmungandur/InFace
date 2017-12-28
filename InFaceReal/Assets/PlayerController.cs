@@ -10,21 +10,23 @@ public class PlayerController : MonoBehaviour {
     private float width = 1;
 
     private Vector3 targetPos;
+    Rigidbody rb;
 
 	// Use this for initialization
 	void Start () {
         targetPos = transform.position;
+        rb = GetComponent<Rigidbody>();
 	}
 	
 	// Update is called once per frame
 	void Update () {
+        if (shootReady == false)
+        {
+            targetPos = transform.position;
+        }
         if (targetPos.y > transform.position.y)
         {
-            transform.Translate(new Vector3(0, 0.01f, 0));
-        }
-        if (targetPos.y < transform.position.y)
-        {
-            transform.Translate(new Vector3(0, -0.01f, 0));
+            transform.Translate(new Vector3(0, 0.01f, 0)); 
         }
     }
 
@@ -32,19 +34,17 @@ public class PlayerController : MonoBehaviour {
     {
         if (Input.GetMouseButtonDown(1))
         {
-            if (Vector3.Distance(targetPos,transform.position) < 0.01f)
-            {
                 if (shootReady == false)
                 {
                     shootReady = true;
                     targetPos = new Vector3(transform.position.x, transform.position.y + height / 2, transform.position.z);
+                    rb.useGravity = false;
                 }
                 else
                 {
                     shootReady = false;
-                    targetPos = new Vector3(transform.position.x, transform.position.y - height / 2, transform.position.z);
+                    rb.useGravity = true;
                 }
-            }
         }
     }
 }
