@@ -24,9 +24,6 @@ public class PlayerController : MonoBehaviour {
 	
 
 	void Update () {
-        Vector3 TheMousePosition = viewCamera.ScreenToWorldPoint(Input.mousePosition); //Get Mouse Position
-        Debug.Log(TheMousePosition);
-
         if (shootReady == false) //Ready the player to shoot.
         {
             targetPos = transform.position;
@@ -39,10 +36,12 @@ public class PlayerController : MonoBehaviour {
 
         if (aiming == true) //Aim the player
         {
-            if (Input.GetMouseButtonUp(0))
+            if (Input.GetMouseButtonUp(0)) //If the player relises the left mousebutton
             {
                 aiming = false;
             }
+            Vector3 lookPoint = new Vector3(MousePosition().x, MousePosition().y, transform.position.z);
+            transform.LookAt(-lookPoint);
         }
     }
 
@@ -74,5 +73,20 @@ public class PlayerController : MonoBehaviour {
                 }
             }
         }
+    }
+
+    Vector3 MousePosition()
+    {
+        Ray ray = viewCamera.ScreenPointToRay(Input.mousePosition);
+        Plane backdrop = new Plane(Vector3.forward, Vector3.zero);
+        float rayDistance;
+
+        if (backdrop.Raycast(ray, out rayDistance))
+        {
+            Vector3 TheMousePosition = ray.GetPoint(rayDistance);
+            //Debug.DrawLine(ray.origin, point, Color.red);
+            return TheMousePosition;
+        }
+        return new Vector3(0, 0, 0);
     }
 }
