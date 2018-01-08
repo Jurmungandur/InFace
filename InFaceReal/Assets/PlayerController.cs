@@ -6,9 +6,11 @@ public class PlayerController : MonoBehaviour {
 
     private bool shootReady = false;
     private bool aiming = false;
+    private bool projectile = false;
 
     private float height = 1;
     private float width = 1;
+    private float power = 0;
 
     Camera viewCamera;
 
@@ -30,7 +32,15 @@ public class PlayerController : MonoBehaviour {
         }
         if (targetPos.y > transform.position.y)
         {
-            transform.Translate(new Vector3(0, 0.01f, 0)); 
+            transform.Translate(new Vector3(0, 0.01f, 0), Space.World); 
+        }
+
+        if (projectile == true)
+        {
+            if (rb.velocity == new Vector3(0, 0, 0))
+            {
+                projectile = false;
+            }
         }
 
 
@@ -38,17 +48,38 @@ public class PlayerController : MonoBehaviour {
         {
             if (Input.GetMouseButtonUp(0)) //If the player relises the left mousebutton
             {
+                power = Vector3.Distance(MousePosition(), transform.position);
+                if (power > 8)
+                {
+                    power = 8;
+                }
+                rb.AddRelativeForce(Vector3.forward * power * 100);
+                rb.useGravity = true;
+                projectile = true;
+                shootReady = false;
                 aiming = false;
             }
-            Vector3 lookPoint = new Vector3(MousePosition().x, MousePosition().y, transform.position.z);
-            transform.LookAt(-lookPoint);
+            float xDistanceToMouse = Vector3.Distance(new Vector3 (MousePosition().x, transform.position.y, transform.position.z), transform.position);
+            float yDistanceToMouse = Vector3.Distance(new Vector3(transform.position.x, MousePosition().y, transform.position.z), transform.position);
+            if (MousePosition().x > transform.position.x)
+            {
+                xDistanceToMouse *= -1;
+            }
+            if (MousePosition().y > transform.position.y)
+            {
+                yDistanceToMouse *= -1;
+            }
+            Vector3 lookPoint = new Vector3(MousePosition().x + (xDistanceToMouse * 2), MousePosition().y + (yDistanceToMouse * 2), transform.position.z);
+            transform.LookAt(lookPoint);
         }
     }
 
     void OnMouseOver()
     {
-        if (Input.GetMouseButtonDown(1)) //Get Input to ready up
+        if (projectile == false)
         {
+            if (Input.GetMouseButtonDown(1)) //Get Input to ready up
+            {
                 if (shootReady == false)
                 {
                     shootReady = true;
@@ -60,6 +91,7 @@ public class PlayerController : MonoBehaviour {
                     shootReady = false;
                     rb.useGravity = true;
                 }
+            }
         }
 
 
