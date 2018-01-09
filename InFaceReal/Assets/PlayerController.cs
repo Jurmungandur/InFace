@@ -42,18 +42,17 @@ public class PlayerController : MonoBehaviour {
                 projectile = false;
             }
         }
-
-
+        
         if (aiming == true) //Aim the player
         {
             if (Input.GetMouseButtonUp(0)) //If the player relises the left mousebutton
             {
                 power = Vector3.Distance(MousePosition(), transform.position);
-                if (power > 8)
+                if (power > 4)
                 {
-                    power = 8;
+                    power = 4;
                 }
-                rb.AddRelativeForce(Vector3.forward * power * 100);
+                rb.AddRelativeForce(Vector3.forward * power * 150);
                 rb.useGravity = true;
                 projectile = true;
                 shootReady = false;
@@ -83,7 +82,7 @@ public class PlayerController : MonoBehaviour {
                 if (shootReady == false)
                 {
                     shootReady = true;
-                    targetPos = new Vector3(transform.position.x, transform.position.y + height / 2, transform.position.z);
+                    targetPos = new Vector3(transform.position.x, transform.position.y + (height-height/4), transform.position.z);
                     rb.useGravity = false;
                 }
                 else
