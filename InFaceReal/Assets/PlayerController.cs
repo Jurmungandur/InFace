@@ -4,17 +4,19 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour {
 
+    public GameObject Tail;
+
     private bool shootReady = false;
-    private bool aiming = false;
+    public bool aiming = false;
     private bool projectile = false;
 
     private float height = 1;
     private float width = 1;
-    private float power = 0;
+    public float power = 0;
 
     Camera viewCamera;
 
-    private Vector3 targetPos;
+    public Vector3 targetPos;
     Rigidbody rb;
 
 
@@ -82,7 +84,7 @@ public class PlayerController : MonoBehaviour {
                 if (shootReady == false)
                 {
                     shootReady = true;
-                    targetPos = new Vector3(transform.position.x, transform.position.y + (height-height/4), transform.position.z);
+                    targetPos = new Vector3(transform.position.x, transform.position.y + height, transform.position.z);
                     rb.useGravity = false;
                 }
                 else
@@ -106,7 +108,7 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
-    Vector3 MousePosition()
+    public Vector3 MousePosition()
     {
         Ray ray = viewCamera.ScreenPointToRay(Input.mousePosition);
         Plane backdrop = new Plane(Vector3.forward, Vector3.zero);
